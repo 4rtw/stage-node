@@ -3,12 +3,6 @@ let aggregatePaginate = require("mongoose-aggregate-paginate-v2")
 let Schema =mongoose.Schema
 
 let enseignantsSchema = Schema({
-    id: {
-        type: Number,
-        required: [true, "Champ requis"],
-        unique: true,
-        min: 0
-    },
     matricule:{
         type: Number,
         required: [true, "Champ requis"],
