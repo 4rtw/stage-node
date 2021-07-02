@@ -11,8 +11,8 @@ const port = process.env.PORT || 3000;
 const prefix = "/api";
 mongoose.Promise = global.Promise;
 /*---------------------------------------------------------------------------------------*/
-//const uri = `mongodb+srv://${variables.user}:${variables.password}@${variables.clustername}/List?retryWrites=true&w=majority`;
-const uri = "mongodb://127.0.0.1:27017/List?gssapiServiceName=mongodb";
+const uri = `mongodb+srv://${variables.user}:${variables.password}@${variables.clustername}/List?retryWrites=true&w=majority`;
+//const uri = "mongodb://variabe:27017/List?gssapiServiceName=mongodb";
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
