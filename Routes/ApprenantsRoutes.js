@@ -289,17 +289,6 @@ function deleteApprenant(req, res) {
   });
 }
 
-/*-----------------------------------------------------------------------------------*/
-const addStudentToParcours = function (apprenantMatricule, ParcoursID) {
-  return apprenants.findByIdAndUpdate(
-    apprenantMatricule,
-    { parcours: ParcoursID },
-    { new: true, useFindAndModify: false }
-  );
-};
-
-/*-----------------------------------------------------------------------------------*/
-
 module.exports = {
   getApprenants,
   getApprenant,
