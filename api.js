@@ -6,7 +6,7 @@ const MSG = require("./Messages/messages");
 const apiResponse = require("./Models/apiResponse");
 const variables = require("./Database/variables");
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const prefix = "/api";
 mongoose.Promise = global.Promise;
 
