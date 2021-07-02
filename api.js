@@ -75,10 +75,9 @@ app.route(prefix + "/apprenants/search").get(apprenant.searchApprenants);
 app
   .route(prefix + "/apprenant/:id")
   .get(apprenant.getApprenant)
-  .put(apprenant.updateApprenant)
   .delete(apprenant.deleteApprenant);
 
-app.route(prefix + "/apprenant").post(apprenant.postApprenant);
+app.route(prefix + "/apprenant").post(apprenant.postApprenant).put(apprenant.updateApprenant);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");
