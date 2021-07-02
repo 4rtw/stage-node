@@ -2,7 +2,7 @@ let mongoose = require('mongoose')
 let aggregatePaginate = require("mongoose-aggregate-paginate-v2")
 let Schema =mongoose.Schema
 
-let profsSchema = Schema({
+let enseignantsSchema = Schema({
     id: {
         type: Number,
         required: [true, "Champ requis"],
@@ -28,6 +28,6 @@ let profsSchema = Schema({
     }
 })
 
-profsSchema.plugin(aggregatePaginate)
+enseignantsSchema.plugin(aggregatePaginate)
 
-module.exports = mongoose.model('Profs', profsSchema);
+module.exports = mongoose.model('enseignants', enseignantsSchema);

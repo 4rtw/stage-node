@@ -1,29 +1,22 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const etudiant = require("./Routes/EtudiantsRoutes");
-const professeur = require("./Routes/ProfessorsRoutes");
-const parcours = require("./Routes/ParcoursRoutes");
+const apprenant = require("./Routes/apprenantsRoutes");
+const enseignant = require("./Routes/enseignantsRoutes");
 const MSG = require("./Messages/messages");
 const apiResponse = require("./Models/apiResponse");
 const variables = require("./Database/variables");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const prefix = "/api";
 mongoose.Promise = global.Promise;
-/*---------------------------------------------------------------------------------------*/
-const uri = `mongodb+srv://${variables.user}:${variables.password}@${variables.clustername}/List?retryWrites=true&w=majority`;
-//const uri = "mongodb://variabe:27017/List?gssapiServiceName=mongodb";
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-};
 
-mongoose.connect(uri, options).then(() => {
+/*---------------------------------------------------------------------------------------*/
+/*Connect to database
+/*---------------------------------------------------------------------------------------*/
+mongoose.connect(variables.uri, variables.options).then(() => {
   console.log("Connected to MongoDB");
 });
 /*---------------------------------------------------------------------------------------*/
-
 // Pour accepter les connexions cross-domain (CORS)
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -40,7 +33,6 @@ app.use(function (req, res, next) {
 });
 
 /*---------------------------------------------------------------------------------------*/
-
 // Pour les formulaires
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -59,48 +51,34 @@ app.use(function (error, req, res, next) {
     next();
   }
 });
-
 /*---------------------------------------------------------------------------------------*/
-
 //api profs
-app.route(prefix + "/professors").get(professeur.getProfesseurs);
+app.route(prefix + "/enseignants").get(enseignant.getEnseignants);
 
 app
-  .route(prefix + "/professor/:id")
-  .get(professeur.getProfesseur)
-  .put(professeur.updateProfesseur)
-  .delete(professeur.deleteProfesseur);
+  .route(prefix + "/enseignant/:id")
+  .get(enseignant.getEnseignant)
+  .put(enseignant.updateEnseignant)
+  .delete(enseignant.deleteEnseignant);
 
-app.route(prefix + "/professeur/search").get(professeur.searchProfesseurs);
+app.route(prefix + "/enseignant/search").get(enseignant.searchEnseignants);
 
-app.route(prefix + "/professor").post(professeur.postProfesseur);
+app.route(prefix + "/enseignant").post(enseignant.postEnseignant);
 
 /*---------------------------------------*/
 
-//api etudiant
-app.route(prefix + "/etudiants").get(etudiant.getEtudiants);
+//api apprenant
+app.route(prefix + "/apprenants").get(apprenant.getApprenants);
 
-app.route(prefix + "/etudiants/search").get(etudiant.searchEtudiants);
-
-app
-  .route(prefix + "/etudiant/:id")
-  .get(etudiant.getEtudiant)
-  .put(etudiant.updateEtudiant)
-  .delete(etudiant.deleteEtudiant);
-
-app.route(prefix + "/etudiant").post(etudiant.postEtudiant);
-
-/*---------------------------------------*/
-//api parcours
-app
-  .route(prefix + "/parcours")
-  .get(parcours.listParcours)
-  .post(parcours.addParcours);
+app.route(prefix + "/apprenants/search").get(apprenant.searchApprenants);
 
 app
-  .route(prefix + "/parcours/:id")
-  .get(parcours.getOneParcours)
-  .put(parcours.updateParcours);
+  .route(prefix + "/apprenant/:id")
+  .get(apprenant.getApprenant)
+  .put(apprenant.updateApprenant)
+  .delete(apprenant.deleteApprenant);
+
+app.route(prefix + "/apprenant").post(apprenant.postApprenant);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");

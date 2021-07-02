@@ -1,21 +1,21 @@
 const MSG = require("../Messages/messages");
 const mongoose = require("mongoose");
-const Etudiants = require("../Models/etudiants");
+const apprenants = require("../Models/apprenants");
 const apiResponse = require("../Models/apiResponse");
 const validate = require("../Services/Validation");
 
 /*---------------------------------------------------------------------------------------------*/
 //Lister les étudiants (GET)
-function getEtudiants(req, res) {
-  let aggregateQuery = Etudiants.aggregate();
+function getApprenants(req, res) {
+  let aggregateQuery = apprenants.aggregate();
 
-  Etudiants.aggregatePaginate(
+  apprenants.aggregatePaginate(
     aggregateQuery,
     {
       page: parseInt(req.query.page) || 1,
       limit: parseInt(req.query.limit) || 10,
     },
-    (err, etudiants) => {
+    (err, apprenants) => {
       if (err) {
         console.error(err.message);
 
@@ -31,7 +31,7 @@ function getEtudiants(req, res) {
       console.log(`Obtention de tous les étudiants`);
       res.status(200).json(
         apiResponse({
-          data: etudiants,
+          data: apprenants,
           status: 1,
           errors: [],
           message: MSG.HTTP_200,
@@ -42,19 +42,19 @@ function getEtudiants(req, res) {
 }
 /*---------------------------------------------------------------------------------------------*/
 //Rechercher les étudiants (GET)
-function searchEtudiants(req, res) {
+function searchApprenants(req, res) {
   let searchString = req.query.searchString;
-  let aggregateQuery = Etudiants.aggregate([
+  let aggregateQuery = apprenants.aggregate([
     { $match: { $text: { $search: searchString } } },
   ]);
 
-  Etudiants.aggregatePaginate(
+  apprenants.aggregatePaginate(
     aggregateQuery,
     {
       page: parseInt(req.query.page) || 1,
       limit: parseInt(req.query.limit) || 10,
     },
-    (err, etudiants) => {
+    (err, apprenants) => {
       if (err) {
         console.error(err.message);
 
@@ -70,7 +70,7 @@ function searchEtudiants(req, res) {
       console.log(`Obtention de tous les étudiants contenant ` + searchString);
       res.status(200).json(
         apiResponse({
-          data: etudiants,
+          data: apprenants,
           status: 1,
           errors: [],
           message: MSG.HTTP_200,
@@ -81,11 +81,11 @@ function searchEtudiants(req, res) {
 }
 /*---------------------------------------------------------------------------------------------*/
 
-//Recuperer un etudiant par son id (GET)
-function getEtudiant(req, res) {
+//Recuperer un apprenant par son id (GET)
+function getApprenant(req, res) {
   const condition = { matricule: req.params.id };
 
-  Etudiants.findOne(condition, (err, etudiant) => {
+  apprenants.findOne(condition, (err, apprenant) => {
     if (err) {
       console.error(err.message);
 
@@ -99,9 +99,9 @@ function getEtudiant(req, res) {
       );
     }
 
-    if (!etudiant) {
+    if (!apprenant) {
       console.warn(
-        `Impossible de trouver l'etudiant  -> [ID = ${condition.matricule}]`
+        `Impossible de trouver l'apprenant  -> [ID = ${condition.matricule}]`
       );
 
       return res.status(404).json(
@@ -109,14 +109,14 @@ function getEtudiant(req, res) {
           data: [],
           status: 0,
           errors: [MSG.HTTP_404],
-          message: `Le etudiant [ID = ${condition.matricule}] n'existe pas`,
+          message: `Le apprenant [ID = ${condition.matricule}] n'existe pas`,
         })
       );
     }
 
     res.status(200).json(
       apiResponse({
-        data: etudiant,
+        data: apprenant,
         status: 1,
         errors: [],
         message: MSG.HTTP_200,
@@ -126,20 +126,20 @@ function getEtudiant(req, res) {
 }
 /*---------------------------------------------------------------------------------------------*/
 
-// Ajout d'un etudiant (POST)
-function postEtudiant(req, res) {
-  let etudiant = new Etudiants();
-  etudiant.matricule = req.body.matricule;
-  etudiant.nom = req.body.nom;
-  etudiant.prenom = req.body.prenom;
-  etudiant.telephone = req.body.telephone;
-  etudiant.adresse = req.body.adresse;
-  etudiant.email = req.body.email;
-  etudiant.contacts_Tuteur_Parent = req.body.contacts_Tuteur_Parent;
+// Ajout d'un apprenant (POST)
+function postApprenant(req, res) {
+  let apprenant = new apprenants();
+  apprenant.matricule = req.body.matricule;
+  apprenant.nom = req.body.nom;
+  apprenant.prenom = req.body.prenom;
+  apprenant.telephone = req.body.telephone;
+  apprenant.adresse = req.body.adresse;
+  apprenant.email = req.body.email;
+  apprenant.contacts_Tuteur_Parent = req.body.contacts_Tuteur_Parent;
 
-  console.log("POST etudiant reçu :" + etudiant);
+  console.log("POST apprenant reçu :" + apprenant);
 
-  const manyErrors = validate(etudiant, [
+  const manyErrors = validate(apprenant, [
     "id",
     "matricule",
     "nom",
@@ -147,7 +147,7 @@ function postEtudiant(req, res) {
     "contacts",
   ]);
 
-  etudiant.save(err => {
+  apprenant.save(err => {
     if (err) {
       console.error(err.message);
       const err_message = manyErrors.length > 0 ? undefined : err.message;
@@ -174,7 +174,7 @@ function postEtudiant(req, res) {
       );
     }
 
-    const msg = `${etudiant.nom} a été créé`;
+    const msg = `${apprenant.nom} a été créé`;
 
     console.log(msg);
     res.status(200).json(
@@ -189,14 +189,14 @@ function postEtudiant(req, res) {
 }
 /*---------------------------------------------------------------------------------------------*/
 
-// Update d'un etudiant (PUT)
-function updateEtudiant(req, res) {
-  console.log("UPDATE recu etudiant : " + req.body);
+// Update d'un apprenant (PUT)
+function updateApprenant(req, res) {
+  console.log("UPDATE recu apprenant : " + req.body);
 
   const condition = { matricule: req.body.matricule };
   const opts = { runValidators: true, new: true };
 
-  Etudiants.findOneAndUpdate(condition, req.body, opts, (err, etudiant) => {
+  apprenants.findOneAndUpdate(condition, req.body, opts, (err, apprenant) => {
     if (err) {
       console.error(err.message);
 
@@ -210,7 +210,7 @@ function updateEtudiant(req, res) {
       );
     }
 
-    if (!etudiant) {
+    if (!apprenant) {
       console.warn(
         `Impossible de trouver l'étudiant  -> [ID = ${condition.matricule}]`
       );
@@ -225,7 +225,7 @@ function updateEtudiant(req, res) {
       );
     }
 
-    const msg = `${etudiant.nom} a été modifié`;
+    const msg = `${apprenant.nom} a été modifié`;
 
     console.log(msg);
 
@@ -241,11 +241,11 @@ function updateEtudiant(req, res) {
 }
 /*---------------------------------------------------------------------------------------------*/
 
-// suppression d'un etudiant (DELETE)
-function deleteEtudiant(req, res) {
+// suppression d'un apprenant (DELETE)
+function deleteApprenant(req, res) {
   const condition = { matricule: req.params.id };
 
-  Etudiants.findOneAndRemove(condition, (err, etudiant) => {
+  apprenants.findOneAndRemove(condition, (err, apprenant) => {
     if (err) {
       console.error(err.message);
 
@@ -259,9 +259,9 @@ function deleteEtudiant(req, res) {
       );
     }
 
-    if (!etudiant) {
+    if (!apprenant) {
       console.warn(
-        `Impossible de trouver l'etudiant  -> [ID = ${condition.matricule}]`
+        `Impossible de trouver l'apprenant  -> [ID = ${condition.matricule}]`
       );
 
       return res.status(404).json(
@@ -269,12 +269,12 @@ function deleteEtudiant(req, res) {
           data: [],
           status: 0,
           errors: [MSG.HTTP_404],
-          message: `L'etudiant [ID = ${condition.matricule}] n'existe pas`,
+          message: `L'apprenant [ID = ${condition.matricule}] n'existe pas`,
         })
       );
     }
 
-    const msg = `${etudiant.nom} a été supprimé`;
+    const msg = `${apprenant.nom} a été supprimé`;
 
     console.log(msg);
 
@@ -290,9 +290,9 @@ function deleteEtudiant(req, res) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-const addStudentToParcours = function (EtudiantMatricule, ParcoursID) {
-  return Etudiants.findByIdAndUpdate(
-    EtudiantMatricule,
+const addStudentToParcours = function (apprenantMatricule, ParcoursID) {
+  return apprenants.findByIdAndUpdate(
+    apprenantMatricule,
     { parcours: ParcoursID },
     { new: true, useFindAndModify: false }
   );
@@ -301,10 +301,10 @@ const addStudentToParcours = function (EtudiantMatricule, ParcoursID) {
 /*-----------------------------------------------------------------------------------*/
 
 module.exports = {
-  getEtudiants,
-  getEtudiant,
-  searchEtudiants,
-  postEtudiant,
-  updateEtudiant,
-  deleteEtudiant,
+  getApprenants,
+  getApprenant,
+  searchApprenants,
+  postApprenant,
+  updateApprenant,
+  deleteApprenant,
 };
