@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const apprenant = require("./Routes/ApprenantsRoutes");
 const enseignant = require("./Routes/EnseignantsRoutes");
+const fraisScolarite = require("./Routes/PayementFraisRoutes");
 const MSG = require("./Messages/messages");
 const apiResponse = require("./Models/apiResponse");
 const variables = require("./Database/variables");
@@ -83,6 +84,23 @@ app
   .route(prefix + "/apprenant")
   .post(apprenant.postApprenant)
   .put(apprenant.updateApprenant);
+
+
+/*---------------------------------------*/
+
+//api payement frais
+// TODO get List selon id inscription
+app.route(prefix + "/frais-scolarite").get(fraisScolarite.getPayementsFrais);
+
+app
+    .route(prefix + "/frais-scolarite/:id")
+    .get(fraisScolarite.getPayementFrais)
+    .delete(fraisScolarite.deletePayementFrais);
+
+app
+    .route(prefix + "/frais-scolarite")
+    .post(fraisScolarite.postPayementFrais)
+
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");
