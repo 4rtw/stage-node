@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const apprenant = require("./Routes/ApprenantsRoutes");
 const enseignant = require("./Routes/EnseignantsRoutes");
+const facturation = require("./Routes/FacturationRoutes");
 const MSG = require("./Messages/messages");
 const apiResponse = require("./Models/apiResponse");
 const variables = require("./Database/variables");
@@ -83,6 +84,21 @@ app
   .route(prefix + "/apprenant")
   .post(apprenant.postApprenant)
   .put(apprenant.updateApprenant);
+
+/*---------------------------------------*/
+
+//api facturation
+//app.route(prefix + "/facturation").get(facturation.getApprenants);
+
+/*app
+  .route(prefix + "/facturation/:id")
+  .get(facturation.getApprenant)
+  .delete(facturation.deleteApprenant);*/
+
+app
+  .route(prefix + "/facturation")
+  .post(facturation.postFacturation)
+  //.put(facturation.updateApprenant);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");
