@@ -28,11 +28,13 @@ let payementSchema = Schema({
     required: [true, "Champ requis"],
   },
 
-  moisAnnee: {
-    type: [{
-      mois: Number,
-      annee: Number,
-    }],
+  mensualites: {
+    type: [String],
+    required: [true, "Champ requis"],
+  },
+
+  periode: {
+    type: Number,
     required: [true, "Champ requis"],
   },
 

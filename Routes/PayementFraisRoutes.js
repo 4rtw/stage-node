@@ -13,7 +13,8 @@ function postPayementFrais(req, res) {
     payement.idInscription = req.body.idInscription;
     payement.datePayement = req.body.datePayement;
     payement.montant = req.body.montant;
-    payement.moisAnnee = req.body.moisAnnee;
+    payement.mensualites = req.body.mensualites;
+    payement.periode = req.body.periode;
     payement.payeePar = req.body.payeePar;
 
     console.log("POST Payement reçu :");
