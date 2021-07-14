@@ -130,25 +130,31 @@ function getEnseignant(req, res) {
 /*---------------------------------------------------------------------------------------------*/
 // Ajout d'un Enseignant (POST)
 function postEnseignant(req, res) {
-  let Enseignant = new Enseignants();
-  Enseignant.id = req.body.id;
-  Enseignant.matricule = req.body.matricule;
-  Enseignant.nom = req.body.nom;
-  Enseignant.prenom = req.body.prenom;
-  Enseignant.contacts = req.body.contacts;
+  let enseignant = new Enseignants();
+  enseignant.matricule = req.body.matricule;
+  enseignant.nom = req.body.nom;
+  enseignant.prenoms = req.body.prenoms;
+  enseignant.telephones = req.body.telephones;
+  enseignant.email = req.body.email;
+  enseignant.naissance = req.body.naissance
+  enseignant.photoUrl = req.body.photoUrl;
+  enseignant.cvUrl = req.body.cvUrl;
+  enseignant.actif = req.body.actif;
 
   console.log("POST Enseignant reçu :");
-  console.log(Enseignant);
+  console.log(enseignant);
 
-  const manyErrors = validate(Enseignant, [
-    "id",
+  const manyErrors = validate(enseignant, [
     "matricule",
     "nom",
-    "prenom",
-    "contacts",
+    "prenoms",
+    "telephones",
+    "email",
+    "photoUrl",
+    "cvUrl",
   ]);
 
-  Enseignant.save(err => {
+  enseignant.save((err) => {
     if (err) {
       console.error(err.message);
       const err_message = manyErrors.length > 0 ? undefined : err.message;
@@ -160,7 +166,7 @@ function postEnseignant(req, res) {
           apiResponse({
             data: [],
             status: 0,
-            errors: [MSG.HTTP_400, ...manyErrors, err_message].filter(x => x),
+            errors: [MSG.HTTP_400, ...manyErrors, err_message].filter((x) => x),
             message: "",
           })
         );
@@ -169,13 +175,13 @@ function postEnseignant(req, res) {
         apiResponse({
           data: [],
           status: 0,
-          errors: [MSG.HTTP_500, ...manyErrors, err_message].filter(x => x),
+          errors: [MSG.HTTP_500, ...manyErrors, err_message].filter((x) => x),
           message: "L'opération n'a pas abouti",
         })
       );
     }
 
-    const msg = `${Enseignant.nom} a été créé`;
+    const msg = `${enseignant.nom} a été créé`;
 
     console.log(msg);
     res.status(200).json(
@@ -197,7 +203,7 @@ function updateEnseignant(req, res) {
   const condition = { matricule: req.body.matricule };
   const opts = { runValidators: true, new: true };
 
-  Enseignants.findOneAndUpdate(condition, req.body, opts, (err, Enseignant) => {
+  Enseignants.findOneAndUpdate(condition, req.body, opts, (err, enseignant) => {
     if (err) {
       console.error(err.message);
 
@@ -211,7 +217,7 @@ function updateEnseignant(req, res) {
       );
     }
 
-    if (!Enseignant) {
+    if (!enseignant) {
       console.warn(
         `Impossible de trouver le Enseignant  -> [ID = ${condition.matricule}]`
       );
@@ -226,7 +232,7 @@ function updateEnseignant(req, res) {
       );
     }
 
-    const msg = `${Enseignant.nom} a été modifié`;
+    const msg = `${enseignant.nom} a été modifié`;
 
     console.log(msg);
 
@@ -246,7 +252,7 @@ function updateEnseignant(req, res) {
 function deleteEnseignant(req, res) {
   const condition = { matricule: req.params.id };
 
-  Enseignants.findOneAndRemove(condition, (err, Enseignant) => {
+  Enseignants.findOneAndRemove(condition, (err, enseignant) => {
     if (err) {
       console.error(err.message);
 
@@ -260,7 +266,7 @@ function deleteEnseignant(req, res) {
       );
     }
 
-    if (!Enseignant) {
+    if (!enseignant) {
       console.warn(
         `Impossible de trouver le Enseignant  -> [ID = ${condition.matricule}]`
       );
@@ -275,7 +281,7 @@ function deleteEnseignant(req, res) {
       );
     }
 
-    const msg = `${Enseignant.nom} a été supprimé`;
+    const msg = `${enseignant.nom} a été supprimé`;
 
     console.log(msg);
 

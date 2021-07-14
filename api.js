@@ -52,18 +52,20 @@ app.use(function (error, req, res, next) {
   }
 });
 /*---------------------------------------------------------------------------------------*/
-//api profs
+//api enseignants
 app.route(prefix + "/enseignants").get(enseignant.getEnseignants);
 
 app
   .route(prefix + "/enseignant/:id")
   .get(enseignant.getEnseignant)
-  .put(enseignant.updateEnseignant)
   .delete(enseignant.deleteEnseignant);
 
-app.route(prefix + "/enseignant/search").get(enseignant.searchEnseignants);
+app.route(prefix + "/enseignants/search").get(enseignant.searchEnseignants);
 
-app.route(prefix + "/enseignant").post(enseignant.postEnseignant);
+app
+  .route(prefix + "/enseignant")
+  .post(enseignant.postEnseignant)
+  .put(enseignant.updateEnseignant);
 
 /*---------------------------------------*/
 
@@ -77,7 +79,10 @@ app
   .get(apprenant.getApprenant)
   .delete(apprenant.deleteApprenant);
 
-app.route(prefix + "/apprenant").post(apprenant.postApprenant).put(apprenant.updateApprenant);
+app
+  .route(prefix + "/apprenant")
+  .post(apprenant.postApprenant)
+  .put(apprenant.updateApprenant);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");

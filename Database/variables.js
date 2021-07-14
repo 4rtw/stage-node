@@ -1,14 +1,14 @@
-const MONGOUSR = "admin"; //"admin"; //mongodb username
-const MONGOPASSWORD = "admin"; //"admin"; //mongodb password
-const CLUSTERNAME = "is2m.gl3gi.mongodb.net"; //"is2m.gl3gi.mongodb.net"; //mongodb cluster name
-const URI = `mongodb+srv://${MONGOUSR}:${MONGOPASSWORD}@${CLUSTERNAME}/List?retryWrites=true&w=majority`;
 const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
 };
 
+const URI = {
+  hostname: "localhost:27017"
+}
+
 module.exports = {
-  uri: URI,
+  uri: `mongodb://${URI.hostname}/?readPreference=primary&appname=MongoDB%20Compass&ssl=false`,
   options: OPTIONS,
 };

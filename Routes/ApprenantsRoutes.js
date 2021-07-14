@@ -132,22 +132,34 @@ function postApprenant(req, res) {
   apprenant.matricule = req.body.matricule;
   apprenant.nom = req.body.nom;
   apprenant.prenom = req.body.prenom;
-  apprenant.telephone = req.body.telephone;
-  apprenant.adresse = req.body.adresse;
   apprenant.email = req.body.email;
-  apprenant.contacts_Tuteur_Parent = req.body.contacts_Tuteur_Parent;
+  apprenant.telephones = req.body.telephones;
+  apprenant.adresse = req.body.adresse;
+  apprenant.baccalaureat = req.body.baccalaureat;
+  apprenant.autresDiplomes = req.body.autresDiplomes;
+  apprenant.anneeInscription = req.body.anneeInscription;
+  apprenant.photoUrl = req.body.photoUrl;
+  apprenant.parentsTuteur = req.body.parentsTuteur;
+  apprenant.naissance = req.body.naissance;
 
   console.log("POST apprenant reçu :" + apprenant);
 
   const manyErrors = validate(apprenant, [
-    "id",
     "matricule",
     "nom",
     "prenom",
-    "contacts",
+    "email",
+    "telephones",
+    "adresse",
+    "baccalaureat",
+    "autresDiplomes",
+    "anneeInscription",
+    "photoUrl",
+    "parentsTuteur",
+    "naissance",
   ]);
 
-  apprenant.save(err => {
+  apprenant.save((err) => {
     if (err) {
       console.error(err.message);
       const err_message = manyErrors.length > 0 ? undefined : err.message;
@@ -159,7 +171,7 @@ function postApprenant(req, res) {
           apiResponse({
             data: [],
             status: 0,
-            errors: [MSG.HTTP_400, ...manyErrors, err_message].filter(x => x),
+            errors: [MSG.HTTP_400, ...manyErrors, err_message].filter((x) => x),
             message: "",
           })
         );
@@ -168,7 +180,7 @@ function postApprenant(req, res) {
         apiResponse({
           data: [],
           status: 0,
-          errors: [MSG.HTTP_500, ...manyErrors, err_message].filter(x => x),
+          errors: [MSG.HTTP_500, ...manyErrors, err_message].filter((x) => x),
           message: "L'opération n'a pas aboutie",
         })
       );

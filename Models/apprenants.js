@@ -8,32 +8,83 @@ let apprenantsSchema = Schema({
     required: [true, "Champ requis"],
     unique: true,
   },
+
   nom: {
     type: String,
     required: [true, "Champ requis"],
   },
+
   prenom: {
     type: String,
     required: [true, "Champ requis"],
   },
-  telephone: {
-    type: String,
-    required: [true, "Champ requis"],
-  },
-  adresse: {
-    type: String,
-    required: [true, "Champ requis"],
-  },
+
   email: {
     type: String,
     required: [true, "Champ requis"],
   },
-  contacts_Tuteur_Parent: {
+
+  telephones: {
     type: [String],
+    required: [true, "Champ requis"],
   },
-  parcours: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Parcours",
+
+  adresse: {
+    type: String,
+    required: [true, "Champ requis"],
+  },
+
+  baccalaureat: {
+    type: {
+      serie: String,
+      mention: String,
+      annee: Number,
+    },
+    required: [true, "Champ requis"],
+  },
+
+  autresDiplomes: {
+    type: [
+      {
+        nom: String,
+        description: String,
+        mention: String,
+        annee: Number,
+      },
+    ],
+  },
+
+  anneeInscription: {
+    type: Number,
+    required: [true, "Champ requis"],
+  },
+
+  photoUrl: {
+    type: String,
+  },
+
+  parentsTuteur: {
+    type: [
+      {
+        nom: String,
+        prenom: String,
+        relationAvecApprenant: String,
+        profession: String,
+        lieuDeTravail: String,
+        email: String,
+        telephone1: String,
+        telephone2: String,
+      },
+    ],
+  },
+
+  naissance: {
+    type: {
+      date: String,
+      lieu: String,
+      sexe: String
+    },
+    required: [true, "Champ requis"],
   },
 });
 
