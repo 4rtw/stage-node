@@ -1,0 +1,230 @@
+{
+	"info": {
+		"_postman_id": "1841c626-ce8e-413a-881f-232f246a17cc",
+		"name": "Stage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Apprenant",
+			"item": [
+				{
+					"name": "List Apprenants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/apprenants",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"apprenants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajouter Apprenant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"matricule\": \"015015016\",\r\n    \"nom\": \"Ando\",\r\n    \"prenom\": \"Lalaina\",\r\n    \"telephones\": [\"+261342698906\", \"0202424517\"],\r\n    \"email\": \"ando.l.andria@gmail.com\",\r\n    \"adresse\": \"Lot IAH 65 bis A Avaratsena Itaosy\",\r\n    \"baccalaureat\":{\r\n        \"serie\": \"D\",\r\n        \"mention\": \"Assez bien\",\r\n        \"annee\": 2013\r\n    },\r\n    \"autresDiplomes\":[\r\n        {\r\n            \"nom\": \"Diplome de Licence\",\r\n            \"description\": \"Diplome de licence en Création Multimedia\",\r\n            \"mention\": \"Bien\",\r\n            \"annee\": 2015\r\n        },\r\n        {\r\n            \"nom\": \"Diplome de Master\",\r\n            \"description\": \"Diplome de Master II en MBDS\",\r\n            \"mention\": \"Bien\",\r\n            \"annee\": 2021\r\n        }\r\n    ],\r\n    \"anneeInscription\": 2012,\r\n    \"photoUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"parentsTuteur\": [\r\n        {\r\n            \"nom\": \"Andriamiharimanana\",\r\n            \"prenom\": \"Manoela Josoa\",\r\n            \"relationAvecApprenant\": \"Père\",\r\n            \"profession\": \"Comptable\",\r\n            \"lieuDeTravail\": \"Design Auto Ankorondrano\",\r\n            \"email\": \"josoam@gmail.com\",\r\n            \"telephone1\": \"0342698906\"\r\n        },\r\n        {\r\n            \"nom\": \"Randrianoelison\",\r\n            \"prenom\": \"Bakoarisoa\",\r\n            \"relationAvecApprenant\": \"Mère\",\r\n            \"profession\": \"Femme au foyer\",\r\n            \"telephone1\": \"0330214418\"\r\n        }\r\n    ],\r\n    \"naissance\": {\r\n        \"date\": \"1997-10-17T18:25:43-05:00\",\r\n        \"lieu\": \"Soavinandriana\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/apprenant",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"apprenant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Apprenant",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"matricule\": 15015016,\r\n    \"nom\": \"Ando Lalaina\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/apprenant/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"apprenant",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Apprenant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/apprenant/15015016",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"apprenant",
+								"15015016"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Apprenant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/apprenant/15015016",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"apprenant",
+								"15015016"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search apprenant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Enseignant",
+			"item": [
+				{
+					"name": "List Enseignants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/enseignants",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"enseignants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create enseignant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"matricule\": \"012120\",\r\n    \"nom\": \"Rakotozanany\",\r\n    \"prenom\": \"Norbert\",\r\n    \"telephones\": [\"+261xxxxxx\"],\r\n    \"email\": \"norbert@gmail.com\",\r\n    \"photoUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"cvUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/enseignant",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"enseignant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete enseignant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/enseignant/012120",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"enseignant",
+								"012120"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enseignant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "Update enseignant",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/enseignant",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"enseignant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Enseignant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
