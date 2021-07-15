@@ -95,10 +95,24 @@ app
   .get(facturation.getApprenant)
   .delete(facturation.deleteApprenant);*/
 
+app.route(prefix + "/facturations/byActivity")
+    .get(facturation.listFacturationsByActivity);
+
+app.route(prefix + "/facturations/byEnseignant")
+    .get(facturation.listFacturationsByEnseignant);
+
+app.route(prefix + "/facturations/byActivityAndEnseignants")
+    .get(facturation.listFacturationsByActivityByEnseignants)
+
+/*app.route(prefix + "/facturations/:periode/:month/:id")
+    .get(facturation.listFacturations);*/
+
 app
   .route(prefix + "/facturation")
   .post(facturation.postFacturation)
-  //.put(facturation.updateApprenant);
+  .put(facturation.addEnseignementToFacturation);
+
+app.route(prefix + "/facturation/close").put(facturation.closeFacture);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");

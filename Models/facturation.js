@@ -12,7 +12,7 @@ let facturationSchema = Schema({
     type: {
       idEnseignant: Number,
       periode: Number,
-      mois: String,
+      mois: Number,
     },
     required: [true, "Champ requis"],
     unique: true,
@@ -27,6 +27,16 @@ let facturationSchema = Schema({
 
   cloture: {
     type: Boolean,
+    required: [true, "Champ requis"],
+  },
+
+  idEnseignant: {
+    type: Number,
+    required: [true, "Champ requis"],
+  },
+
+  activite: {
+    type: { periode: Number, mois: Number },
     required: [true, "Champ requis"],
   },
 });
