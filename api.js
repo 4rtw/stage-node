@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const apprenant = require("./Routes/ApprenantsRoutes");
 const enseignant = require("./Routes/EnseignantsRoutes");
 const facturation = require("./Routes/FacturationRoutes");
+const fraisScolarite = require("./Routes/PayementFraisRoutes");
 const MSG = require("./Messages/messages");
 const apiResponse = require("./Models/apiResponse");
 const variables = require("./Database/variables");
@@ -85,6 +86,7 @@ app
   .post(apprenant.postApprenant)
   .put(apprenant.updateApprenant);
 
+
 /*---------------------------------------*/
 
 //api facturation
@@ -108,11 +110,25 @@ app.route(prefix + "/facturations/byActivityAndEnseignants")
     .get(facturation.listFacturations);*/
 
 app
-  .route(prefix + "/facturation")
-  .post(facturation.postFacturation)
-  .put(facturation.addEnseignementToFacturation);
+    .route(prefix + "/facturation")
+    .post(facturation.postFacturation)
+    .put(facturation.addEnseignementToFacturation);
 
 app.route(prefix + "/facturation/close").put(facturation.closeFacture);
+
+/*---------------------------------------*/
+
+//api payement frais
+app
+    .route(prefix + "/frais-scolarite")
+    .get(fraisScolarite.getPayementsFraisByPeriodeAndInsciption);
+
+app
+    .route(prefix + "/frais-scolarite/:id")
+    .get(fraisScolarite.getPayementFrais)
+    .delete(fraisScolarite.deletePayementFrais);
+
+app.route(prefix + "/frais-scolarite").post(fraisScolarite.postPayementFrais);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");
