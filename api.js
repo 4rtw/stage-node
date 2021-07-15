@@ -85,22 +85,19 @@ app
   .post(apprenant.postApprenant)
   .put(apprenant.updateApprenant);
 
-
 /*---------------------------------------*/
 
 //api payement frais
-// TODO get List selon id inscription
-app.route(prefix + "/frais-scolarite").get(fraisScolarite.getPayementsFrais);
+app
+  .route(prefix + "/frais-scolarite")
+  .get(fraisScolarite.getPayementsFraisByPeriodeAndInsciption);
 
 app
-    .route(prefix + "/frais-scolarite/:id")
-    .get(fraisScolarite.getPayementFrais)
-    .delete(fraisScolarite.deletePayementFrais);
+  .route(prefix + "/frais-scolarite/:id")
+  .get(fraisScolarite.getPayementFrais)
+  .delete(fraisScolarite.deletePayementFrais);
 
-app
-    .route(prefix + "/frais-scolarite")
-    .post(fraisScolarite.postPayementFrais)
-
+app.route(prefix + "/frais-scolarite").post(fraisScolarite.postPayementFrais);
 
 /*---------------------------------------------------------------------------------------*/
 app.listen(port, "0.0.0.0");

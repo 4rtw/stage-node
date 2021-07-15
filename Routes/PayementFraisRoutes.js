@@ -122,7 +122,7 @@ function deletePayementFrais(req, res) {
 /*---------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------------------------*/
-//Recuperer un Enseignant par son id (GET)
+//Recuperer un payement par son id (GET)
 function getPayementFrais(req, res) {
     const condition = { idPayement: req.params.id };
 
@@ -169,14 +169,65 @@ function getPayementFrais(req, res) {
 
 /*---------------------------------------------------------------------------------------------*/
 //Lister les Enseignants (GET)
-function getPayementsFrais(req, res) {
+function getPayementsFraisByPeriodeAndInsciption(req, res) {
+    const periode = req.query.periode;
+    const idInscription = req.query.idInscription;
 
-    // TODO get sans pagination
+    PayementFrais.find(
+        {
+            $and: [
+                {
+                    periode: parseInt(periode, 10)
+                },
+                {
+                    idInscription: parseInt(idInscription, 10)
+                }
+            ]
+        },
+        (err, payement)=> {
+            if (err) {
+                console.error(err.message);
+
+                return res.status(500).json(
+                    apiResponse({
+                        data: [],
+                        status: 0,
+                        errors: [MSG.HTTP_500, err.message],
+                        message: "L'opération n'a pas abouti",
+                    })
+                );
+            }
+
+            if (!payement) {
+                console.warn(
+                    `Impossible de trouver les payements  -> période = ${periode} et idInscription = ${idInscription} `
+                );
+
+                return res.status(404).json(
+                    apiResponse({
+                        data: [],
+                        status: 0,
+                        errors: [MSG.HTTP_404],
+                        message: `Aucun payement recenssé`,
+                    })
+                );
+            }
+
+            res.status(200).json(
+                apiResponse({
+                    data: payement,
+                    status: 1,
+                    errors: [],
+                    message: MSG.HTTP_200,
+                })
+            );
+        })
+
 }
 /*---------------------------------------------------------------------------------------------*/
 module.exports = {
     postPayementFrais,
     deletePayementFrais,
     getPayementFrais,
-    getPayementsFrais
+    getPayementsFraisByPeriodeAndInsciption
 };
