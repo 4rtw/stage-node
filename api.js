@@ -90,12 +90,6 @@ app
 /*---------------------------------------*/
 
 //api facturation
-//app.route(prefix + "/facturation").get(facturation.getApprenants);
-
-/*app
-  .route(prefix + "/facturation/:id")
-  .get(facturation.getApprenant)
-  .delete(facturation.deleteApprenant);*/
 
 app.route(prefix + "/facturations/byActivity")
     .get(facturation.listFacturationsByActivity);
@@ -106,8 +100,6 @@ app.route(prefix + "/facturations/byEnseignant")
 app.route(prefix + "/facturations/byActivityAndEnseignants")
     .get(facturation.listFacturationsByActivityByEnseignants)
 
-/*app.route(prefix + "/facturations/:periode/:month/:id")
-    .get(facturation.listFacturations);*/
 
 app
     .route(prefix + "/facturation")
