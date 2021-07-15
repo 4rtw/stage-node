@@ -7,7 +7,7 @@ const validate = require("../Services/Validation");
 /*---------------------------------------------------------------------------------------------*/
 // Ajout d'un payement (POST)
 function postPayementFrais(req, res) {
-    let payement = new PayementFrais();
+    const payement = new PayementFrais();
     payement.idPayement = req.body.idPayement;
     payement.typePayement = req.body.typePayement;
     payement.idInscription = req.body.idInscription;

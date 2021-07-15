@@ -7,7 +7,7 @@ const validate = require("../Services/Validation");
 /*---------------------------------------------------------------------------------------------*/
 //Lister les Enseignants (GET)
 function getEnseignants(req, res) {
-  let aggregateQuery = Enseignants.aggregate();
+  const aggregateQuery = Enseignants.aggregate();
 
   Enseignants.aggregatePaginate(
     aggregateQuery,
@@ -43,8 +43,8 @@ function getEnseignants(req, res) {
 /*---------------------------------------------------------------------------------------------*/
 //Rechercher les Enseignants (GET)
 function searchEnseignants(req, res) {
-  let searchString = req.query.searchString;
-  let aggregateQuery = Enseignants.aggregate([
+  const searchString = req.query.searchString;
+  const aggregateQuery = Enseignants.aggregate([
     { $match: { $text: { $search: searchString } } },
   ]);
 

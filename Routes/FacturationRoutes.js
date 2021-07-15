@@ -8,7 +8,7 @@ const validate = require("../Services/Validation");
 /*---------------------------------------------------------------------------------------------*/
 // Ajout d'une facturation (POST)
 function postFacturation(req, res) {
-  let facturation = new Facturation();
+  const facturation = new Facturation();
   facturation.idFacture = req.body.idFacture;
   facturation.details = req.body.details;
   facturation.enseignements = req.body.enseignements;
@@ -30,8 +30,9 @@ function postFacturation(req, res) {
   console.log("POST facturation reçu :");
   console.log(facturation);
 
-  let condition = { matricule: req.body.details.idEnseignant };
+  const condition = { matricule: req.body.details.idEnseignant };
 
+  //Check si l'enseignant existe, si oui -> créer facture, si non -> renvoyer une érreur
   Enseignants.findOne(condition, (err, enseignant) => {
     if (err) {
       console.error(err.message);
@@ -61,6 +62,7 @@ function postFacturation(req, res) {
       );
     }
 
+    //save facturation
     facturation.save((err) => {
       if (err) {
         console.error(err.message);
@@ -115,10 +117,10 @@ function addEnseignementToFacturation(req, res) {
   const opts = { runValidators: true, new: true };
 
   Facturation.findOne(condition, null, opts, (err, facturation) => {
-    let enseignements = facturation.enseignements;
-    let newEnseignements = req.body.enseignements;
+    const enseignements = facturation.enseignements;
+    const newEnseignements = req.body.enseignements;
 
-    let allEnseignements = enseignements.concat(newEnseignements);
+    const allEnseignements = enseignements.concat(newEnseignements);
 
     Facturation.findOneAndUpdate(
       condition,
@@ -231,7 +233,7 @@ function closeFacture(req, res) {
 /*---------------------------------------------------------------------------------------------*/
 //Lister les facturation (GET)
 function listFacturationsByActivity(req, res) {
-  let activite = {
+  const activite = {
     mois: parseInt(req.query.month, 10),
     periode: parseInt(req.query.periode, 10),
   };
@@ -304,7 +306,7 @@ function listFacturationsByEnseignant(req, res) {
 
 //Lister les facturation (GET)
 function listFacturationsByActivityByEnseignants(req, res) {
-  let activite = {
+  const activite = {
     mois: parseInt(req.query.month, 10),
     periode: parseInt(req.query.periode, 10),
   };

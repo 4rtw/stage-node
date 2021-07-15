@@ -5,7 +5,7 @@ const apiResponse = require("../Models/apiResponse");
 const validate = require("../Services/Validation");
 
 /*---------------------------------------------------------------------------------------------*/
-//Lister les étudiants (GET)
+//Lister les apprenants (GET)
 function getApprenants(req, res) {
   let aggregateQuery = apprenants.aggregate();
 
@@ -28,7 +28,7 @@ function getApprenants(req, res) {
           })
         );
       }
-      console.log(`Obtention de tous les étudiants`);
+      console.log(`Obtention de tous les apprenants`);
       res.status(200).json(
         apiResponse({
           data: apprenants,
@@ -41,10 +41,10 @@ function getApprenants(req, res) {
   );
 }
 /*---------------------------------------------------------------------------------------------*/
-//Rechercher les étudiants (GET)
+//Rechercher les apprenants (GET)
 function searchApprenants(req, res) {
-  let searchString = req.query.searchString;
-  let aggregateQuery = apprenants.aggregate([
+  const searchString = req.query.searchString;
+  const aggregateQuery = apprenants.aggregate([
     { $match: { $text: { $search: searchString } } },
   ]);
 
@@ -67,7 +67,7 @@ function searchApprenants(req, res) {
           })
         );
       }
-      console.log(`Obtention de tous les étudiants contenant ` + searchString);
+      console.log(`Obtention de tous les apprenants contenant ` + searchString);
       res.status(200).json(
         apiResponse({
           data: apprenants,
@@ -128,7 +128,7 @@ function getApprenant(req, res) {
 
 // Ajout d'un apprenant (POST)
 function postApprenant(req, res) {
-  let apprenant = new apprenants();
+  const apprenant = new apprenants();
   apprenant.matricule = req.body.matricule;
   apprenant.nom = req.body.nom;
   apprenant.prenom = req.body.prenom;
@@ -224,7 +224,7 @@ function updateApprenant(req, res) {
 
     if (!apprenant) {
       console.warn(
-        `Impossible de trouver l'étudiant  -> [ID = ${condition.matricule}]`
+        `Impossible de trouver l'apprenant  -> [ID = ${condition.matricule}]`
       );
 
       return res.status(404).json(
@@ -232,7 +232,7 @@ function updateApprenant(req, res) {
           data: [],
           status: 0,
           errors: [MSG.HTTP_404],
-          message: `L'étudiant [ID = ${condition.matricule}] n'existe pas`,
+          message: `L'apprenant [ID = ${condition.matricule}] n'existe pas`,
         })
       );
     }
