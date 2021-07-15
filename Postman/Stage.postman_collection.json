@@ -32,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"matricule\": \"015015016\",\r\n    \"nom\": \"Ando\",\r\n    \"prenom\": \"Lalaina\",\r\n    \"telephones\": [\"+261342698906\", \"0202424517\"],\r\n    \"email\": \"ando.l.andria@gmail.com\",\r\n    \"adresse\": \"Lot IAH 65 bis A Avaratsena Itaosy\",\r\n    \"baccalaureat\":{\r\n        \"serie\": \"D\",\r\n        \"mention\": \"Assez bien\",\r\n        \"annee\": 2013\r\n    },\r\n    \"autresDiplomes\":[\r\n        {\r\n            \"nom\": \"Diplome de Licence\",\r\n            \"description\": \"Diplome de licence en Création Multimedia\",\r\n            \"mention\": \"Bien\",\r\n            \"annee\": 2015\r\n        },\r\n        {\r\n            \"nom\": \"Diplome de Master\",\r\n            \"description\": \"Diplome de Master II en MBDS\",\r\n            \"mention\": \"Bien\",\r\n            \"annee\": 2021\r\n        }\r\n    ],\r\n    \"anneeInscription\": 2012,\r\n    \"photoUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"parentsTuteur\": [\r\n        {\r\n            \"nom\": \"Andriamiharimanana\",\r\n            \"prenom\": \"Manoela Josoa\",\r\n            \"relationAvecApprenant\": \"Père\",\r\n            \"profession\": \"Comptable\",\r\n            \"lieuDeTravail\": \"Design Auto Ankorondrano\",\r\n            \"email\": \"josoam@gmail.com\",\r\n            \"telephone1\": \"0342698906\"\r\n        },\r\n        {\r\n            \"nom\": \"Randrianoelison\",\r\n            \"prenom\": \"Bakoarisoa\",\r\n            \"relationAvecApprenant\": \"Mère\",\r\n            \"profession\": \"Femme au foyer\",\r\n            \"telephone1\": \"0330214418\"\r\n        }\r\n    ],\r\n    \"naissance\": {\r\n        \"date\": \"1997-10-17T18:25:43-05:00\",\r\n        \"lieu\": \"Soavinandriana\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"matricule\": \"015015016\",\r\n    \"nom\": \"Ando\",\r\n    \"prenom\": \"Lalaina\",\r\n    \"telephones\": [\"+261342698906\", \"0202424517\"],\r\n    \"email\": \"ando.l.andria@gmail.com\",\r\n    \"adresse\": \"Lot IAH 65 bis A Avaratsena Itaosy\",\r\n    \"baccalaureat\":{\r\n        \"serie\": \"D\",\r\n        \"mention\": \"Assez bien\",\r\n        \"annee\": 2013\r\n    },\r\n    \"autresDiplomes\":[\r\n        {\r\n            \"nom\": \"Diplome de Licence\",\r\n            \"description\": \"Diplome de licence en Création Multimedia\",\r\n            \"mention\": \"Bien\",\r\n            \"annee\": 2015\r\n        },\r\n        {\r\n            \"nom\": \"Diplome de Master\",\r\n            \"description\": \"Diplome de Master II en MBDS\",\r\n            \"mention\": \"Bien\",\r\n            \"annee\": 2021\r\n        }\r\n    ],\r\n    \"anneeInscription\": 2012,\r\n    \"photoUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"parentsTuteur\": [\r\n        {\r\n            \"nom\": \"Andriamiharimanana\",\r\n            \"prenom\": \"Manoela Josoa\",\r\n            \"relationAvecApprenant\": \"Père\",\r\n            \"profession\": \"Comptable\",\r\n            \"lieuDeTravail\": \"Design Auto Ankorondrano\",\r\n            \"email\": \"josoam@gmail.com\",\r\n            \"telephone1\": \"0342698906\"\r\n        },\r\n        {\r\n            \"nom\": \"Randrianoelison\",\r\n            \"prenom\": \"Bakoarisoa\",\r\n            \"relationAvecApprenant\": \"Mère\",\r\n            \"profession\": \"Femme au foyer\",\r\n            \"telephone1\": \"0330214418\"\r\n        }\r\n    ],\r\n    \"naissance\": {\r\n        \"date\": \"1997-10-17T18:25:43-05:00\",\r\n        \"lieu\": \"Soavinandriana\",\r\n        \"sexe\": \"M\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -58,7 +58,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"matricule\": 15015016,\r\n    \"nom\": \"Ando Lalaina\"\r\n}",
+							"raw": "{\r\n    \"matricule\": 15015016,\r\n    \"naissance\": {\r\n        \"date\": \"17/10/1997\",\r\n        \"lieu\": \"Soavinandriana\",\r\n        \"sexe\": \"M\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -119,7 +119,22 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "{{url}}/apprenants/search?searchString=\"Ando\"",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"apprenants",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": "\"Ando\""
+								}
+							]
+						}
 					},
 					"response": []
 				}
@@ -152,7 +167,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"matricule\": \"012120\",\r\n    \"nom\": \"Rakotozanany\",\r\n    \"prenom\": \"Norbert\",\r\n    \"telephones\": [\"+261xxxxxx\"],\r\n    \"email\": \"norbert@gmail.com\",\r\n    \"photoUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"cvUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\"\r\n}",
+							"raw": "{\r\n    \"matricule\": \"012122\",\r\n    \"nom\": \"Monsieur\",\r\n    \"prenoms\": \"Nalisoa\",\r\n    \"telephones\": [\"+261xxxxxx\"],\r\n    \"email\": \"nalisoa@gmail.com\",\r\n    \"naissance\": {\r\n        \"date\": \"01/01/1960\",\r\n        \"lieu\": \"Tananarivo\",\r\n        \"sexe\": \"M\"\r\n    },\r\n    \"photoUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"cvUrl\": \"https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg\",\r\n    \"actif\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,7 +209,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "{{url}}/enseignant/12122",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"enseignant",
+								"12122"
+							]
+						}
 					},
 					"response": []
 				},
@@ -203,6 +227,15 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"matricule\": 12120,\r\n    \"nom\": \"Rakotozanany\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{url}}/enseignant",
 							"host": [
@@ -220,7 +253,284 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "{{url}}/enseignants/search?searchString=\"Norbert\"",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"enseignants",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchString",
+									"value": "\"Norbert\""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Frais de scolarité",
+			"item": [
+				{
+					"name": "Create payement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idPayement\": 2,\r\n    \"typePayement\": \"Frais de scolarité\",\r\n    \"idInscription\": 2021015015016,\r\n    \"datePayement\": \"14/08/2021\",\r\n    \"montant\": 200000,\r\n    \"mensualites\": [\r\n        \"Mars\",\r\n        \"Avril\"\r\n    ],\r\n    \"periode\": 2021,\r\n    \"payeePar\": \"espece\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/frais-scolarite",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"frais-scolarite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete payement",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/frais-scolarite/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"frais-scolarite",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payement by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/frais-scolarite/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"frais-scolarite",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payement by idInscription et periode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/frais-scolarite?periode=2021&idInscription=2021015015016",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"frais-scolarite"
+							],
+							"query": [
+								{
+									"key": "periode",
+									"value": "2021"
+								},
+								{
+									"key": "idInscription",
+									"value": "2021015015016"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Facturation",
+			"item": [
+				{
+					"name": "Create facturation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idFacture\": 14,\r\n    \"details\": {\r\n        \"idEnseignant\": 12122,\r\n        \"periode\": 2021,\r\n        \"mois\": 8\r\n    },\r\n    \"enseignements\": [],\r\n    \"cloture\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/facturation",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add enseignements",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idFacture\": 1,\r\n    \"enseignements\": [\r\n        {\r\n            \"idEnseignement\": 1,\r\n            \"montant\": 800\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/facturation",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Close facturation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idFacture\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/facturation/close",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturation",
+								"close"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Facturations par mois par periode par enseignant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/facturations/byActivityAndEnseignants?periode=2021&month=8&idEnseignant=12122",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturations",
+								"byActivityAndEnseignants"
+							],
+							"query": [
+								{
+									"key": "periode",
+									"value": "2021"
+								},
+								{
+									"key": "month",
+									"value": "8"
+								},
+								{
+									"key": "idEnseignant",
+									"value": "12122"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Facturations par mois par periode Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/facturations/byActivity?periode=2021&month=10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturations",
+								"byActivity"
+							],
+							"query": [
+								{
+									"key": "periode",
+									"value": "2021"
+								},
+								{
+									"key": "month",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Facturations par enseignants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/facturations/byEnseignant?idEnseignant=12121",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturations",
+								"byEnseignant"
+							],
+							"query": [
+								{
+									"key": "idEnseignant",
+									"value": "12121"
+								}
+							]
+						}
 					},
 					"response": []
 				}
