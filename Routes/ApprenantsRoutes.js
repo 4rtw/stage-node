@@ -1,13 +1,16 @@
+require("dotenv").config();
+const CryptoJS = require("crypto-js");
 const MSG = require("../Messages/messages");
 const mongoose = require("mongoose");
 const apprenants = require("../Models/apprenants");
 const apiResponse = require("../Models/apiResponse");
 const validate = require("../Services/Validation");
+const checkError = require("../Services/ErrorHandling");
 
 /*---------------------------------------------------------------------------------------------*/
 //Lister les apprenants (GET)
 function getApprenants(req, res) {
-  let aggregateQuery = apprenants.aggregate();
+  let aggregateQuery = apprenants.aggregate([{ $unset: "password" }]);
 
   apprenants.aggregatePaginate(
     aggregateQuery,
@@ -16,27 +19,21 @@ function getApprenants(req, res) {
       limit: parseInt(req.query.limit) || 10,
     },
     (err, apprenants) => {
-      if (err) {
-        console.error(err.message);
-
-        return res.status(500).json(
-          apiResponse({
-            data: [],
-            status: 0,
-            errors: [MSG.HTTP_500, err.message],
-            message: "L'opération n'a pas abouti",
-          })
-        );
+      try {
+        if (!checkError.handleErrors(err, res, undefined)) {
+          console.log(`Obtention de tous les apprenants`);
+          res.status(200).json(
+            apiResponse({
+              data: apprenants,
+              status: 1,
+              errors: [],
+              message: MSG.HTTP_200,
+            })
+          );
+        }
+      } catch (error) {
+        console.error;
       }
-      console.log(`Obtention de tous les apprenants`);
-      res.status(200).json(
-        apiResponse({
-          data: apprenants,
-          status: 1,
-          errors: [],
-          message: MSG.HTTP_200,
-        })
-      );
     }
   );
 }
@@ -46,6 +43,7 @@ function searchApprenants(req, res) {
   const searchString = req.query.searchString;
   const aggregateQuery = apprenants.aggregate([
     { $match: { $text: { $search: searchString } } },
+    { $unset: "password" },
   ]);
 
   apprenants.aggregatePaginate(
@@ -55,27 +53,23 @@ function searchApprenants(req, res) {
       limit: parseInt(req.query.limit) || 10,
     },
     (err, apprenants) => {
-      if (err) {
-        console.error(err.message);
-
-        return res.status(500).json(
-          apiResponse({
-            data: [],
-            status: 0,
-            errors: [MSG.HTTP_500, err.message],
-            message: "L'opération n'a pas abouti",
-          })
-        );
+      try {
+        if (!checkError.handleErrors(err, res, undefined)) {
+          console.log(
+            `Obtention de tous les apprenants contenant ` + searchString
+          );
+          res.status(200).json(
+            apiResponse({
+              data: apprenants,
+              status: 1,
+              errors: [],
+              message: MSG.HTTP_200,
+            })
+          );
+        }
+      } catch (error) {
+        checkError.returnFatalError(err, res);
       }
-      console.log(`Obtention de tous les apprenants contenant ` + searchString);
-      res.status(200).json(
-        apiResponse({
-          data: apprenants,
-          status: 1,
-          errors: [],
-          message: MSG.HTTP_200,
-        })
-      );
     }
   );
 }
@@ -85,118 +79,66 @@ function searchApprenants(req, res) {
 function getApprenant(req, res) {
   const condition = { matricule: req.params.id };
 
-  apprenants.findOne(condition, (err, apprenant) => {
-    if (err) {
-      console.error(err.message);
-
-      return res.status(500).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_500, err.message],
-          message: "L'opération n'a pas abouti",
-        })
-      );
-    }
-
-    if (!apprenant) {
-      console.warn(
-        `Impossible de trouver l'apprenant  -> [ID = ${condition.matricule}]`
-      );
-
-      return res.status(404).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_404],
-          message: `Le apprenant [ID = ${condition.matricule}] n'existe pas`,
-        })
-      );
-    }
-
-    res.status(200).json(
-      apiResponse({
-        data: apprenant,
-        status: 1,
-        errors: [],
-        message: MSG.HTTP_200,
-      })
-    );
-  });
+  apprenants
+    .findOne(condition, (err, apprenant) => {
+      try {
+        if (!checkError.handleErrors(err, res, undefined)) {
+          if (!checkError.handleNoItem(res, apprenant)) {
+            res.status(200).json(
+              apiResponse({
+                data: apprenant,
+                status: 1,
+                errors: [],
+                message: MSG.HTTP_200,
+              })
+            );
+          }
+        }
+      } catch (error) {
+        checkError.returnFatalError(error, res);
+      }
+    })
+    .select("-password");
 }
 /*---------------------------------------------------------------------------------------------*/
 
 // Ajout d'un apprenant (POST)
 function postApprenant(req, res) {
   const apprenant = new apprenants();
-  apprenant.matricule = req.body.matricule;
-  apprenant.nom = req.body.nom;
-  apprenant.prenom = req.body.prenom;
-  apprenant.email = req.body.email;
-  apprenant.telephones = req.body.telephones;
-  apprenant.adresse = req.body.adresse;
-  apprenant.baccalaureat = req.body.baccalaureat;
-  apprenant.autresDiplomes = req.body.autresDiplomes;
-  apprenant.anneeInscription = req.body.anneeInscription;
-  apprenant.photoUrl = req.body.photoUrl;
-  apprenant.parentsTuteur = req.body.parentsTuteur;
-  apprenant.naissance = req.body.naissance;
+  const keys = [];
 
-  console.log("POST apprenant reçu :" + apprenant);
+  for (const [key, value] of Object.entries(req.body)) {
+    apprenant[key] = value;
+    keys.push(key);
+  }
 
-  const manyErrors = validate(apprenant, [
-    "matricule",
-    "nom",
-    "prenom",
-    "email",
-    "telephones",
-    "adresse",
-    "baccalaureat",
-    "autresDiplomes",
-    "anneeInscription",
-    "photoUrl",
-    "parentsTuteur",
-    "naissance",
-  ]);
+  const encrypted = CryptoJS.AES.encrypt(
+    req.body.matricule + req.body.anneeInscription,
+    process.env.SALT_PASSWORD_APPRENANT
+  );
+  apprenant.password = encrypted;
+
+  const manyErrors = validate(apprenant, keys);
 
   apprenant.save((err) => {
-    if (err) {
-      console.error(err.message);
-      const err_message = manyErrors.length > 0 ? undefined : err.message;
-      if (
-        err.message.includes("E11000") ||
-        err instanceof mongoose.Error.ValidationError
-      ) {
-        return res.status(400).json(
+    try {
+      //Si la fonction ne renvoie aucune erreur
+      if (!checkError.handleErrors(err, res, manyErrors)) {
+        const msg = `${apprenant.nom} a été créé`;
+        console.log(msg);
+
+        res.status(200).json(
           apiResponse({
             data: [],
-            status: 0,
-            errors: [MSG.HTTP_400, ...manyErrors, err_message].filter((x) => x),
-            message: "",
+            status: 1,
+            errors: [],
+            message: msg,
           })
         );
       }
-      return res.status(500).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_500, ...manyErrors, err_message].filter((x) => x),
-          message: "L'opération n'a pas aboutie",
-        })
-      );
+    } catch (error) {
+      checkError.returnFatalError(error, res);
     }
-
-    const msg = `${apprenant.nom} a été créé`;
-
-    console.log(msg);
-    res.status(200).json(
-      apiResponse({
-        data: [],
-        status: 1,
-        errors: [],
-        message: msg,
-      })
-    );
   });
 }
 /*---------------------------------------------------------------------------------------------*/
@@ -208,48 +150,28 @@ function updateApprenant(req, res) {
   const condition = { matricule: req.body.matricule };
   const opts = { runValidators: true, new: true };
 
-  apprenants.findOneAndUpdate(condition, req.body, opts, (err, apprenant) => {
-    if (err) {
-      console.error(err.message);
-
-      return res.status(500).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_500, err.message],
-          message: "L'opération n'a pas abouti",
-        })
-      );
-    }
-
-    if (!apprenant) {
-      console.warn(
-        `Impossible de trouver l'apprenant  -> [ID = ${condition.matricule}]`
-      );
-
-      return res.status(404).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_404],
-          message: `L'apprenant [ID = ${condition.matricule}] n'existe pas`,
-        })
-      );
-    }
-
-    const msg = `${apprenant.nom} a été modifié`;
-
-    console.log(msg);
-
-    res.status(200).json(
-      apiResponse({
-        data: [],
-        status: 1,
-        errors: [],
-        message: msg,
-      })
-    );
-  });
+  if (!checkError.handleErrorPasswordInBody(req, res)) {
+    apprenants.findOneAndUpdate(condition, req.body, opts, (err, apprenant) => {
+      try {
+        if (!checkError.handleErrors(err, res, undefined)) {
+          if (!checkError.handleNoItem(res, apprenant)) {
+            const msg = `${apprenant.nom} a été modifié`;
+            console.log(msg);
+            res.status(200).json(
+              apiResponse({
+                data: [],
+                status: 1,
+                errors: [],
+                message: msg,
+              })
+            );
+          }
+        }
+      } catch (e) {
+        checkError.returnFatalError(e, res);
+      }
+    });
+  }
 }
 /*---------------------------------------------------------------------------------------------*/
 
@@ -258,46 +180,24 @@ function deleteApprenant(req, res) {
   const condition = { matricule: req.params.id };
 
   apprenants.findOneAndRemove(condition, (err, apprenant) => {
-    if (err) {
-      console.error(err.message);
-
-      return res.status(500).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_500, err.message],
-          message: "L'opération n'a pas abouti",
-        })
-      );
+    try {
+      if (!checkError.handleErrors(err, res, undefined)) {
+        if (!checkError.handleNoItem(res, apprenant)) {
+          const msg = `${apprenant.nom} a été supprimé`;
+          console.log(msg);
+          res.status(200).json(
+            apiResponse({
+              data: [],
+              status: 1,
+              errors: [],
+              message: msg,
+            })
+          );
+        }
+      }
+    } catch (e) {
+      checkError.returnFatalError(e, res);
     }
-
-    if (!apprenant) {
-      console.warn(
-        `Impossible de trouver l'apprenant  -> [ID = ${condition.matricule}]`
-      );
-
-      return res.status(404).json(
-        apiResponse({
-          data: [],
-          status: 0,
-          errors: [MSG.HTTP_404],
-          message: `L'apprenant [ID = ${condition.matricule}] n'existe pas`,
-        })
-      );
-    }
-
-    const msg = `${apprenant.nom} a été supprimé`;
-
-    console.log(msg);
-
-    res.status(200).json(
-      apiResponse({
-        data: [],
-        status: 1,
-        errors: [],
-        message: msg,
-      })
-    );
   });
 }
 

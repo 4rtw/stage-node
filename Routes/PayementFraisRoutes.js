@@ -8,14 +8,10 @@ const validate = require("../Services/Validation");
 // Ajout d'un payement (POST)
 function postPayementFrais(req, res) {
     const payement = new PayementFrais();
-    payement.idPayement = req.body.idPayement;
-    payement.typePayement = req.body.typePayement;
-    payement.idInscription = req.body.idInscription;
-    payement.datePayement = req.body.datePayement;
-    payement.montant = req.body.montant;
-    payement.mensualites = req.body.mensualites;
-    payement.periode = req.body.periode;
-    payement.payeePar = req.body.payeePar;
+
+    for (const [key, value] of Object.entries(req.body)) {
+        payement[key] = value;
+    }
 
     console.log("POST Payement reçu :");
     console.log(payement);
@@ -68,7 +64,7 @@ function postPayementFrais(req, res) {
                 message: msg,
             })
         );
-    });
+    })
 }
 
 /*---------------------------------------------------------------------------------------------*/

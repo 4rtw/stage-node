@@ -20,10 +20,10 @@ let enseignantsSchema = Schema({
   },
 
   naissance: {
-    type:{
+    type: {
       date: String,
       lieu: String,
-      sexe: String
+      sexe: String,
     },
     required: [true, "Champ requis"],
   },
@@ -43,13 +43,18 @@ let enseignantsSchema = Schema({
   },
 
   cvUrl: {
-    type: String
+    type: String,
   },
 
   actif: {
     type: Boolean,
     required: [true, "Champ requis"],
-  }
+  },
+
+  password: {
+    type: String,
+    required: [true, "Champ requis"],
+  },
 });
 
 enseignantsSchema.plugin(aggregatePaginate);

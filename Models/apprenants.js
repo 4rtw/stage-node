@@ -82,8 +82,13 @@ let apprenantsSchema = Schema({
     type: {
       date: String,
       lieu: String,
-      sexe: String
+      sexe: String,
     },
+    required: [true, "Champ requis"],
+  },
+
+  password: {
+    type: String,
     required: [true, "Champ requis"],
   },
 });

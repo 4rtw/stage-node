@@ -9,15 +9,10 @@ const validate = require("../Services/Validation");
 // Ajout d'une facturation (POST)
 function postFacturation(req, res) {
   const facturation = new Facturation();
-  facturation.idFacture = req.body.idFacture;
-  facturation.details = req.body.details;
-  facturation.enseignements = req.body.enseignements;
-  facturation.cloture = req.body.cloture;
-  facturation.idEnseignant = req.body.details.idEnseignant;
-  facturation.activite = {
-    mois: req.body.details.mois,
-    periode: req.body.details.periode,
-  };
+
+  for (const [key, value] of Object.entries(req.body)) {
+    facturation[key] = value;
+  }
 
   const manyErrors = validate(facturation, [
     "idFacture",

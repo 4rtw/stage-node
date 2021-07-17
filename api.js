@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require("express");
 const mongoose = require("mongoose");
 const apprenant = require("./Routes/ApprenantsRoutes");
@@ -8,7 +10,7 @@ const MSG = require("./Messages/messages");
 const apiResponse = require("./Models/apiResponse");
 const variables = require("./Database/variables");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 3000;
 const prefix = "/api";
 mongoose.Promise = global.Promise;
 

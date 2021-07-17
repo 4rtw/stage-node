@@ -1,11 +1,16 @@
+require('dotenv').config()
+
 const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
 };
 
+const databaseHostname = process.env.DB_HOSTNAME
+const databasePort = process.env.DB_PORT
+
 const URI = {
-  hostname: "localhost:27017"
+  hostname: databaseHostname + ":" + databasePort
 }
 
 module.exports = {
