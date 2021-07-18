@@ -1,7 +1,6 @@
 require("dotenv").config();
 const CryptoJS = require("crypto-js");
 const MSG = require("../Messages/messages");
-const mongoose = require("mongoose");
 const Enseignants = require("../Models/enseignant");
 const apiResponse = require("../Models/apiResponse");
 const validate = require("../Services/Validation");
@@ -83,7 +82,7 @@ function getEnseignant(req, res) {
   Enseignants.findOne(condition, (err, enseignant) => {
     try {
       if (!checkError.handleErrors(err, res, undefined)) {
-        if (!checkError.handleNoItem(res, enseignant)) {
+        if (!checkError.handleNoItem(res, enseignant, condition.matricule)) {
           res.status(200).json(
             apiResponse({
               data: enseignant,
@@ -153,7 +152,7 @@ function updateEnseignant(req, res) {
       (err, enseignant) => {
         try {
           if (!checkError.handleErrors(err, res, undefined)) {
-            if (!checkError.handleNoItem(res, enseignant)) {
+            if (!checkError.handleNoItem(res, enseignant, condition.matricule)) {
               const msg = `${enseignant.nom} a été modifié`;
               console.log(msg);
               res.status(200).json(
@@ -182,7 +181,7 @@ function deleteEnseignant(req, res) {
   Enseignants.findOneAndRemove(condition, (err, enseignant) => {
     try {
       if (!checkError.handleErrors(err, res, undefined)) {
-        if (!checkError.handleNoItem(res, enseignant)) {
+        if (!checkError.handleNoItem(res, enseignant, condition.matricule)) {
           const msg = `${enseignant.nom} a été supprimé`;
           console.log(msg);
           res.status(200).json(

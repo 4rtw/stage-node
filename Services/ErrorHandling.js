@@ -33,9 +33,9 @@ function handleErrors(err, res, manyErrors) {
   }
 }
 
-function handleNoItem(res, item) {
+function handleNoItem(res, item, msg) {
   if (!item) {
-    console.warn(`Impossible de trouver l'objet`);
+    console.warn(`Impossible de trouver l'objet - ${msg}`);
     return res.status(404).json(
       apiResponse({
         data: [],

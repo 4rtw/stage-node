@@ -83,7 +83,7 @@ function getApprenant(req, res) {
     .findOne(condition, (err, apprenant) => {
       try {
         if (!checkError.handleErrors(err, res, undefined)) {
-          if (!checkError.handleNoItem(res, apprenant)) {
+          if (!checkError.handleNoItem(res, apprenant, condition.matricule)) {
             res.status(200).json(
               apiResponse({
                 data: apprenant,
@@ -154,7 +154,7 @@ function updateApprenant(req, res) {
     apprenants.findOneAndUpdate(condition, req.body, opts, (err, apprenant) => {
       try {
         if (!checkError.handleErrors(err, res, undefined)) {
-          if (!checkError.handleNoItem(res, apprenant)) {
+          if (!checkError.handleNoItem(res, apprenant, condition.matricule)) {
             const msg = `${apprenant.nom} a été modifié`;
             console.log(msg);
             res.status(200).json(
@@ -182,7 +182,7 @@ function deleteApprenant(req, res) {
   apprenants.findOneAndRemove(condition, (err, apprenant) => {
     try {
       if (!checkError.handleErrors(err, res, undefined)) {
-        if (!checkError.handleNoItem(res, apprenant)) {
+        if (!checkError.handleNoItem(res, apprenant, condition.matricule)) {
           const msg = `${apprenant.nom} a été supprimé`;
           console.log(msg);
           res.status(200).json(

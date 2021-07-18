@@ -1,8 +1,8 @@
-let mongoose = require("mongoose");
-let aggregatePaginate = require("mongoose-aggregate-paginate-v2");
-let Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+const Schema = mongoose.Schema;
 
-let enseignantsSchema = Schema({
+const enseignantsSchema = Schema({
   matricule: {
     type: Number,
     required: [true, "Champ requis"],
