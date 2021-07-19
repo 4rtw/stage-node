@@ -1,3 +1,4 @@
 # Project exclude paths
 /node_modules/
 firebase-debug.log
+.idea

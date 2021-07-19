@@ -5,34 +5,31 @@ const Enseignants = require("../Models/enseignant");
 const apiResponse = require("../Models/apiResponse");
 const validate = require("../Services/Validation");
 const checkError = require("../Services/ErrorHandling");
+const enseignantService = require("../Services/EnseignantService");
 
 /*---------------------------------------------------------------------------------------------*/
 //Lister les Enseignants (GET)
 function getEnseignants(req, res) {
   const aggregateQuery = Enseignants.aggregate([{ $unset: "password" }]);
+  const pages = {
+    page: parseInt(req.query.page) || 1,
+    limit: parseInt(req.query.limit) || 10,
+  };
 
-  Enseignants.aggregatePaginate(
+  enseignantService.getPaginateEnseignants(
     aggregateQuery,
-    {
-      page: parseInt(req.query.page) || 1,
-      limit: parseInt(req.query.limit) || 10,
-    },
-    (err, enseignants) => {
-      try {
-        if (!checkError.handleErrors(err, res, undefined)) {
-          console.log(`Obtention de tous les Enseignants`);
-          res.status(200).json(
-            apiResponse({
-              data: enseignants,
-              status: 1,
-              errors: [],
-              message: MSG.HTTP_200,
-            })
-          );
-        }
-      } catch (e) {
-        checkError.returnFatalError(e, res);
-      }
+    pages,
+    res,
+    (enseignants) => {
+      console.log(`Obtention de tous les Enseignants`);
+      return res.status(200).json(
+        apiResponse({
+          data: enseignants,
+          status: 1,
+          errors: [],
+          message: MSG.HTTP_200,
+        })
+      );
     }
   );
 }
@@ -152,7 +149,9 @@ function updateEnseignant(req, res) {
       (err, enseignant) => {
         try {
           if (!checkError.handleErrors(err, res, undefined)) {
-            if (!checkError.handleNoItem(res, enseignant, condition.matricule)) {
+            if (
+              !checkError.handleNoItem(res, enseignant, condition.matricule)
+            ) {
               const msg = `${enseignant.nom} a été modifié`;
               console.log(msg);
               res.status(200).json(

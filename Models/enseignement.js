@@ -1,11 +1,21 @@
-let mongoose = require("mongoose");
-let Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-let enseignementSchema = Schema({
+const enseignementSchema = Schema({
   idEnseignement: {
     type: Number,
     required: [true, "Champ requis"],
     unique: true,
+  },
+
+  matriculeEnseignant: {
+    type: Number,
+    required: [true, "Champ requis"],
+  },
+
+  matriculePointeur: {
+    type: Number,
+    required: [true, "Champ requis"],
   },
 
   idEC: {
@@ -13,27 +23,47 @@ let enseignementSchema = Schema({
     required: [true, "Champ requis"],
   },
 
-  details: {
+  sujetCours: {
+    type: String,
+    required: [true, "Champ requis"],
+  },
+
+  classe: {
     type: {
-      matriculeEnseignant: Number,
-      heureDebut: Number,
-      minutesDebut: Number,
-      heureFin: Number,
-      minFin: Number,
       periode: Number,
-      mois: Number,
-      jour: Number,
+      niveau: String,
+      idParcours: [Number],
     },
     required: [true, "Champ requis"],
-    unique: true,
+  },
+
+  heureDebut: {
+    type: String,
+    required: [true, "Champ requis"],
+  },
+
+  heureFin: {
+    type: String,
+  },
+
+  volume: {
+    type: {
+      heures: Number,
+      minutes: Number,
+    }
+  },
+
+  cloture: {
+    type: Boolean
   },
 
   remarques: {
     type: {
       retard: String,
       absence: String,
+      autres: String,
     },
   },
 });
 
-module.exports = mongoose.model("facturation", enseignementSchema);
+module.exports = mongoose.model("enseignements", enseignementSchema);
