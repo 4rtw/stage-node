@@ -1,7 +1,7 @@
-const apiResponse = require("../Models/apiResponse");
+const apiResponse = require("../../Models/apiResponse");
 const res = require("express");
 const mongoose = require("mongoose");
-const MSG = require("../Messages/messages");
+const MSG = require("../../Messages/messages");
 
 function handleErrors(err, res, manyErrors) {
   if (err) {

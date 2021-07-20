@@ -1,11 +1,11 @@
 require("dotenv").config();
 const Enseignement = require("../Models/enseignement");
-const validate = require("../Services/Validation");
+const validate = require("../Services/Utils/Validation");
 const Enseignant = require("../Models/enseignant");
-const checkError = require("../Services/ErrorHandling");
+const checkError = require("../Services/Utils/ErrorHandling");
 const apiResponse = require("../Models/apiResponse");
 const Apprenant = require("../Models/apprenants");
-const time = require("../Services/HourDifferenceCalculator");
+const time = require("../Services/Utils/HourDifferenceCalculator");
 
 function postEnseignements(req, res) {
   const enseignement = new Enseignement();

@@ -1,9 +1,8 @@
 const MSG = require("../Messages/messages");
-const mongoose = require("mongoose");
 const PayementFrais = require("../Models/payementFrais");
 const apiResponse = require("../Models/apiResponse");
-const validate = require("../Services/Validation");
-const checkError = require("../Services/ErrorHandling");
+const validate = require("../Services/Utils/Validation");
+const payementFraisService = require("../Services/PayementFraisService");
 
 /*---------------------------------------------------------------------------------------------*/
 // Ajout d'un payement (POST)
@@ -21,20 +20,17 @@ function postPayementFrais(req, res) {
 
   const manyErrors = validate(payement, keys);
 
-  payement.save((err) => {
-    if (!checkError.handleErrors(err, res, manyErrors)) {
-      const msg = `${payement.idPayement} - Payement éffectué`;
-
-      console.log(msg);
-      res.status(200).json(
-        apiResponse({
-          data: [],
-          status: 1,
-          errors: [],
-          message: msg,
-        })
-      );
-    }
+  payementFraisService.savePayement(payement, manyErrors, res, (payement) => {
+    const msg = `${payement.idPayement} - Payement éffectué`;
+    console.log(msg);
+    return res.status(200).json(
+      apiResponse({
+        data: [],
+        status: 1,
+        errors: [],
+        message: msg,
+      })
+    );
   });
 }
 
@@ -43,85 +39,66 @@ function postPayementFrais(req, res) {
 function deletePayementFrais(req, res) {
   const condition = { idPayement: req.params.id };
 
-  PayementFrais.findOneAndRemove(condition, (err, payementFrais) => {
-    if (!checkError.handleErrors(err, res, undefined)) {
-      if (!checkError.handleNoItem(res, payementFrais, condition.idPayement)) {
-        const msg = `${payementFrais.idPayement} a été supprimé`;
+  payementFraisService.deletePayement(condition, res, (payementFrais) => {
+    const msg = `${payementFrais.idPayement} a été supprimé`;
+    console.log(msg);
 
-        console.log(msg);
-
-        res.status(200).json(
-          apiResponse({
-            data: [],
-            status: 1,
-            errors: [],
-            message: msg,
-          })
-        );
-      }
-    }
+    res.status(200).json(
+      apiResponse({
+        data: [],
+        status: 1,
+        errors: [],
+        message: msg,
+      })
+    );
   });
 }
-/*---------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------------------------*/
 //Recuperer un payement par son id (GET)
 function getPayementFrais(req, res) {
   const condition = { idPayement: req.params.id };
 
-  PayementFrais.findOne(condition, (err, payementFrais) => {
-    if (!checkError.handleErrors(err, res, undefined)) {
-      if (!checkError.handleNoItem(res, payementFrais, condition.idPayement)) {
-        res.status(200).json(
-          apiResponse({
-            data: payementFrais,
-            status: 1,
-            errors: [],
-            message: MSG.HTTP_200,
-          })
-        );
-      }
-    }
+  payementFraisService.getPayement(condition, res, (payementFrais) => {
+    res.status(200).json(
+      apiResponse({
+        data: payementFrais,
+        status: 1,
+        errors: [],
+        message: MSG.HTTP_200,
+      })
+    );
   });
 }
-/*---------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------------------------*/
 //Lister les Enseignants (GET)
 function getPayementsFraisByPeriodeAndInsciption(req, res) {
   const periode = req.query.periode;
   const idInscription = req.query.idInscription;
+  const filter = {
+    $and: [
+      {
+        periode: parseInt(periode, 10),
+      },
+      {
+        idInscription: parseInt(idInscription, 10),
+      },
+    ],
+  };
 
-  PayementFrais.find(
-    {
-      $and: [
-        {
-          periode: parseInt(periode, 10),
-        },
-        {
-          idInscription: parseInt(idInscription, 10),
-        },
-      ],
-    },
-    (err, payement) => {
-      if (!checkError.handleErrors(err, res, undefined)) {
-        if (
-          !checkError.handleNoItem(res, payement, periode + "-" + idInscription)
-        ) {
-          res.status(200).json(
-            apiResponse({
-              data: payement,
-              status: 1,
-              errors: [],
-              message: MSG.HTTP_200,
-            })
-          );
-        }
-      }
-    }
-  );
+  payementFraisService.getPayements(filter, res, (payement) => {
+    res.status(200).json(
+      apiResponse({
+        data: payement,
+        status: 1,
+        errors: [],
+        message: MSG.HTTP_200,
+      })
+    );
+  });
 }
-/*---------------------------------------------------------------------------------------------*/
+
 module.exports = {
   postPayementFrais,
   deletePayementFrais,

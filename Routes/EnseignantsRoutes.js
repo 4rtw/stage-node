@@ -3,8 +3,8 @@ const CryptoJS = require("crypto-js");
 const MSG = require("../Messages/messages");
 const Enseignants = require("../Models/enseignant");
 const apiResponse = require("../Models/apiResponse");
-const validate = require("../Services/Validation");
-const checkError = require("../Services/ErrorHandling");
+const validate = require("../Services/Utils/Validation");
+const checkError = require("../Services/Utils/ErrorHandling");
 const enseignantService = require("../Services/EnseignantService");
 
 /*---------------------------------------------------------------------------------------------*/
@@ -42,31 +42,25 @@ function searchEnseignants(req, res) {
     { $match: { $text: { $search: searchString } } },
     { $unset: "password" },
   ]);
+  const pages = {
+    page: parseInt(req.query.page) || 1,
+    limit: parseInt(req.query.limit) || 10,
+  };
 
-  Enseignants.aggregatePaginate(
+  enseignantService.getPaginateEnseignants(
     aggregateQuery,
-    {
-      page: parseInt(req.query.page) || 1,
-      limit: parseInt(req.query.limit) || 10,
-    },
-    (err, enseignants) => {
-      try {
-        if (!checkError.handleErrors(err, res, undefined)) {
-          console.log(
-            `Obtention de tous les Enseignants contenant ` + searchString
-          );
-          res.status(200).json(
-            apiResponse({
-              data: enseignants,
-              status: 1,
-              errors: [],
-              message: MSG.HTTP_200,
-            })
-          );
-        }
-      } catch (e) {
-        checkError.returnFatalError(e, res);
-      }
+    pages,
+    res,
+    (enseignants) => {
+      console.log(`Obtention de tous les Enseignants`);
+      return res.status(200).json(
+        apiResponse({
+          data: enseignants,
+          status: 1,
+          errors: [],
+          message: MSG.HTTP_200,
+        })
+      );
     }
   );
 }
@@ -76,24 +70,21 @@ function searchEnseignants(req, res) {
 function getEnseignant(req, res) {
   const condition = { matricule: req.params.id };
 
-  Enseignants.findOne(condition, (err, enseignant) => {
-    try {
-      if (!checkError.handleErrors(err, res, undefined)) {
-        if (!checkError.handleNoItem(res, enseignant, condition.matricule)) {
-          res.status(200).json(
-            apiResponse({
-              data: enseignant,
-              status: 1,
-              errors: [],
-              message: MSG.HTTP_200,
-            })
-          );
-        }
-      }
-    } catch (e) {
-      checkError.returnFatalError(e, res);
+  enseignantService.getEnseignantAndDoCallback(
+    condition,
+    res,
+    undefined,
+    (enseignant) => {
+      return res.status(200).json(
+        apiResponse({
+          data: enseignant,
+          status: 1,
+          errors: [],
+          message: MSG.HTTP_200,
+        })
+      );
     }
-  }).select("-password");
+  );
 }
 
 /*---------------------------------------------------------------------------------------------*/
@@ -113,24 +104,23 @@ function postEnseignant(req, res) {
 
   const manyErrors = validate(enseignant, keys);
 
-  enseignant.save((err) => {
-    try {
-      if (!checkError.handleErrors(err, res, manyErrors)) {
-        const msg = `${enseignant.nom} a été créé`;
-        console.log(msg);
-        res.status(200).json(
-          apiResponse({
-            data: [],
-            status: 1,
-            errors: [],
-            message: msg,
-          })
-        );
-      }
-    } catch (e) {
-      checkError.returnFatalError(e, res);
+  enseignantService.saveEnseignant(
+    enseignant,
+    res,
+    manyErrors,
+    (enseignant) => {
+      const msg = `${enseignant.nom} a été créé`;
+      console.log(msg);
+      res.status(200).json(
+        apiResponse({
+          data: [],
+          status: 1,
+          errors: [],
+          message: msg,
+        })
+      );
     }
-  });
+  );
 }
 
 /*---------------------------------------------------------------------------------------------*/
@@ -139,34 +129,25 @@ function updateEnseignant(req, res) {
   console.log("UPDATE recu Enseignant : " + req.body);
 
   const condition = { matricule: req.body.matricule };
-  const opts = { runValidators: true, new: true };
+
+  const modification = req.body;
 
   if (!checkError.handleErrorPasswordInBody(req, res)) {
-    Enseignants.findOneAndUpdate(
+    enseignantService.updateEnseignant(
       condition,
-      req.body,
-      opts,
-      (err, enseignant) => {
-        try {
-          if (!checkError.handleErrors(err, res, undefined)) {
-            if (
-              !checkError.handleNoItem(res, enseignant, condition.matricule)
-            ) {
-              const msg = `${enseignant.nom} a été modifié`;
-              console.log(msg);
-              res.status(200).json(
-                apiResponse({
-                  data: [],
-                  status: 1,
-                  errors: [],
-                  message: msg,
-                })
-              );
-            }
-          }
-        } catch (e) {
-          checkError.returnFatalError(e, res);
-        }
+      modification,
+      res,
+      (enseignant) => {
+        const msg = `${enseignant.nom} a été modifié`;
+        console.log(msg);
+        return res.status(200).json(
+          apiResponse({
+            data: [],
+            status: 1,
+            errors: [],
+            message: msg,
+          })
+        );
       }
     );
   }
@@ -177,25 +158,17 @@ function updateEnseignant(req, res) {
 function deleteEnseignant(req, res) {
   const condition = { matricule: req.params.id };
 
-  Enseignants.findOneAndRemove(condition, (err, enseignant) => {
-    try {
-      if (!checkError.handleErrors(err, res, undefined)) {
-        if (!checkError.handleNoItem(res, enseignant, condition.matricule)) {
-          const msg = `${enseignant.nom} a été supprimé`;
-          console.log(msg);
-          res.status(200).json(
-            apiResponse({
-              data: [],
-              status: 1,
-              errors: [],
-              message: msg,
-            })
-          );
-        }
-      }
-    } catch (e) {
-      checkError.returnFatalError(e, res);
-    }
+  enseignantService.deleteEnseignant(condition, res, (enseignant) => {
+    const msg = `${enseignant.nom} a été supprimé`;
+    console.log(msg);
+    res.status(200).json(
+      apiResponse({
+        data: [],
+        status: 1,
+        errors: [],
+        message: msg,
+      })
+    );
   });
 }
 /*---------------------------------------------------------------------------------------------*/

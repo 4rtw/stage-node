@@ -1,4 +1,4 @@
-const checkError = require("./ErrorHandling");
+const checkError = require("./Utils/ErrorHandling");
 const apiResponse = require("../Models/apiResponse");
 const Facturation = require("../Models/facturation");
 const opts = { runValidators: true, new: true };

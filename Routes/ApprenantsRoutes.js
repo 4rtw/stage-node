@@ -4,36 +4,33 @@ const MSG = require("../Messages/messages");
 const mongoose = require("mongoose");
 const apprenants = require("../Models/apprenants");
 const apiResponse = require("../Models/apiResponse");
-const validate = require("../Services/Validation");
-const checkError = require("../Services/ErrorHandling");
+const validate = require("../Services/Utils/Validation");
+const checkError = require("../Services/Utils/ErrorHandling");
+const apprenantService = require("../Services/ApprenantService");
 
 /*---------------------------------------------------------------------------------------------*/
 //Lister les apprenants (GET)
 function getApprenants(req, res) {
-  let aggregateQuery = apprenants.aggregate([{ $unset: "password" }]);
+  const aggregateQuery = apprenants.aggregate([{ $unset: "password" }]);
+  const pages = {
+    page: parseInt(req.query.page) || 1,
+    limit: parseInt(req.query.limit) || 10,
+  };
 
-  apprenants.aggregatePaginate(
+  apprenantService.getPaginateApprenants(
     aggregateQuery,
-    {
-      page: parseInt(req.query.page) || 1,
-      limit: parseInt(req.query.limit) || 10,
-    },
-    (err, apprenants) => {
-      try {
-        if (!checkError.handleErrors(err, res, undefined)) {
-          console.log(`Obtention de tous les apprenants`);
-          res.status(200).json(
-            apiResponse({
-              data: apprenants,
-              status: 1,
-              errors: [],
-              message: MSG.HTTP_200,
-            })
-          );
-        }
-      } catch (error) {
-        console.error;
-      }
+    pages,
+    res,
+    (apprenants) => {
+      console.log(`Obtention de tous les apprenants`);
+      res.status(200).json(
+        apiResponse({
+          data: apprenants,
+          status: 1,
+          errors: [],
+          message: MSG.HTTP_200,
+        })
+      );
     }
   );
 }
@@ -45,31 +42,25 @@ function searchApprenants(req, res) {
     { $match: { $text: { $search: searchString } } },
     { $unset: "password" },
   ]);
+  const pages = {
+    page: parseInt(req.query.page) || 1,
+    limit: parseInt(req.query.limit) || 10,
+  };
 
-  apprenants.aggregatePaginate(
+  apprenantService.getPaginateApprenants(
     aggregateQuery,
-    {
-      page: parseInt(req.query.page) || 1,
-      limit: parseInt(req.query.limit) || 10,
-    },
-    (err, apprenants) => {
-      try {
-        if (!checkError.handleErrors(err, res, undefined)) {
-          console.log(
-            `Obtention de tous les apprenants contenant ` + searchString
-          );
-          res.status(200).json(
-            apiResponse({
-              data: apprenants,
-              status: 1,
-              errors: [],
-              message: MSG.HTTP_200,
-            })
-          );
-        }
-      } catch (error) {
-        checkError.returnFatalError(err, res);
-      }
+    pages,
+    res,
+    (apprenants) => {
+      console.log(`Obtention de tous les apprenants contenant ` + searchString);
+      res.status(200).json(
+        apiResponse({
+          data: apprenants,
+          status: 1,
+          errors: [],
+          message: MSG.HTTP_200,
+        })
+      );
     }
   );
 }
@@ -79,26 +70,16 @@ function searchApprenants(req, res) {
 function getApprenant(req, res) {
   const condition = { matricule: req.params.id };
 
-  apprenants
-    .findOne(condition, (err, apprenant) => {
-      try {
-        if (!checkError.handleErrors(err, res, undefined)) {
-          if (!checkError.handleNoItem(res, apprenant, condition.matricule)) {
-            res.status(200).json(
-              apiResponse({
-                data: apprenant,
-                status: 1,
-                errors: [],
-                message: MSG.HTTP_200,
-              })
-            );
-          }
-        }
-      } catch (error) {
-        checkError.returnFatalError(error, res);
-      }
-    })
-    .select("-password");
+  apprenantService.getApprenant(condition, res, (apprenant) => {
+    return res.status(200).json(
+      apiResponse({
+        data: apprenant,
+        status: 1,
+        errors: [],
+        message: MSG.HTTP_200,
+      })
+    );
+  });
 }
 /*---------------------------------------------------------------------------------------------*/
 
@@ -120,25 +101,18 @@ function postApprenant(req, res) {
 
   const manyErrors = validate(apprenant, keys);
 
-  apprenant.save((err) => {
-    try {
-      //Si la fonction ne renvoie aucune erreur
-      if (!checkError.handleErrors(err, res, manyErrors)) {
-        const msg = `${apprenant.nom} a été créé`;
-        console.log(msg);
+  apprenantService.saveApprenant(apprenant, manyErrors, res, (apprenant) => {
+    const msg = `${apprenant.nom} a été créé`;
+    console.log(msg);
 
-        res.status(200).json(
-          apiResponse({
-            data: [],
-            status: 1,
-            errors: [],
-            message: msg,
-          })
-        );
-      }
-    } catch (error) {
-      checkError.returnFatalError(error, res);
-    }
+    return res.status(200).json(
+      apiResponse({
+        data: [],
+        status: 1,
+        errors: [],
+        message: msg,
+      })
+    );
   });
 }
 /*---------------------------------------------------------------------------------------------*/
@@ -149,28 +123,26 @@ function updateApprenant(req, res) {
 
   const condition = { matricule: req.body.matricule };
   const opts = { runValidators: true, new: true };
+  const modifications = req.body;
 
   if (!checkError.handleErrorPasswordInBody(req, res)) {
-    apprenants.findOneAndUpdate(condition, req.body, opts, (err, apprenant) => {
-      try {
-        if (!checkError.handleErrors(err, res, undefined)) {
-          if (!checkError.handleNoItem(res, apprenant, condition.matricule)) {
-            const msg = `${apprenant.nom} a été modifié`;
-            console.log(msg);
-            res.status(200).json(
-              apiResponse({
-                data: [],
-                status: 1,
-                errors: [],
-                message: msg,
-              })
-            );
-          }
-        }
-      } catch (e) {
-        checkError.returnFatalError(e, res);
+    apprenantService.updateApprenant(
+      condition,
+      modifications,
+      res,
+      (apprenant) => {
+        const msg = `${apprenant.nom} a été modifié`;
+        console.log(msg);
+        res.status(200).json(
+          apiResponse({
+            data: [],
+            status: 1,
+            errors: [],
+            message: msg,
+          })
+        );
       }
-    });
+    );
   }
 }
 /*---------------------------------------------------------------------------------------------*/
@@ -179,25 +151,17 @@ function updateApprenant(req, res) {
 function deleteApprenant(req, res) {
   const condition = { matricule: req.params.id };
 
-  apprenants.findOneAndRemove(condition, (err, apprenant) => {
-    try {
-      if (!checkError.handleErrors(err, res, undefined)) {
-        if (!checkError.handleNoItem(res, apprenant, condition.matricule)) {
-          const msg = `${apprenant.nom} a été supprimé`;
-          console.log(msg);
-          res.status(200).json(
-            apiResponse({
-              data: [],
-              status: 1,
-              errors: [],
-              message: msg,
-            })
-          );
-        }
-      }
-    } catch (e) {
-      checkError.returnFatalError(e, res);
-    }
+  apprenantService.deleteApprenant(condition, res, (apprenant) => {
+    const msg = `${apprenant.nom} a été supprimé`;
+    console.log(msg);
+    res.status(200).json(
+      apiResponse({
+        data: [],
+        status: 1,
+        errors: [],
+        message: msg,
+      })
+    );
   });
 }
 

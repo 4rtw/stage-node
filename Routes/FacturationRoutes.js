@@ -2,7 +2,7 @@ require("dotenv").config();
 const MSG = require("../Messages/messages");
 const Facturation = require("../Models/facturation");
 const apiResponse = require("../Models/apiResponse");
-const validate = require("../Services/Validation");
+const validate = require("../Services/Utils/Validation");
 const factureService = require("../Services/FacturationService");
 const enseignantService = require("../Services/EnseignantService");
 /*---------------------------------------------------------------------------------------------*/
