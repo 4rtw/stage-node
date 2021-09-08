@@ -4,33 +4,37 @@ const mongoose = require("mongoose");
 const MSG = require("../../Messages/messages");
 
 function handleErrors(err, res, manyErrors) {
-  if (err) {
-    console.error(err.message);
-    if (manyErrors) {
-      const err_message = manyErrors.length > 0 ? undefined : err.message;
-      if (
-        err.message.includes("E11000") ||
-        err instanceof mongoose.Error.ValidationError
-      ) {
-        return res.status(400).json(
-          apiResponse({
-            data: [],
-            status: 0,
-            errors: [MSG.HTTP_400, manyErrors, err_message].filter((x) => x),
-          })
-        );
-      }
-    }
+    let err_message;
+    if (err) {
+        console.error(err.message);
+        if (manyErrors) {
+            err_message = manyErrors.length > 0 ? undefined : err.message;
+            if (
+                err.message.includes("E11000") ||
+                err instanceof mongoose.Error.ValidationError
+            ) {
+                return res.status(400).json(
+                    apiResponse({
+                        data: [],
+                        status: 0,
+                        errors: [MSG.HTTP_400, manyErrors, err_message].filter((x) => x),
+                    })
+                );
+            }
+        }
 
-    const err_message = manyErrors.length > 0 ? undefined : err.message;
-    return res.status(500).json(
-      apiResponse({
-        data: [],
-        status: 0,
-        errors: [MSG.HTTP_500, manyErrors, err_message].filter((x) => x),
-      })
-    );
-  }
+        if (!err_message) {
+            err_message = "erreur fatale";
+        }
+
+        return res.status(500).json(
+            apiResponse({
+                data: [],
+                status: 0,
+                errors: [MSG.HTTP_500, manyErrors, err_message].filter((x) => x),
+            })
+        );
+    }
 }
 
 function handleNoItem(res, item, msg) {

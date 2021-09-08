@@ -8,7 +8,7 @@ function connect() {
     .then(() => {
       console.log("Connected to MongoDB");
     })
-    .catch((e) => {
+    .catch(e => {
       console.error("Could not connect to database");
       console.error(e);
       setTimeout(() => {
