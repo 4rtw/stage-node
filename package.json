@@ -1,12 +1,12 @@
 {
-  "name": "hello-world",
+  "name": "backend-project",
   "version": "1.0.0",
-  "description": "Training",
-  "main": "index.js",
+  "description": "Backend for API - Projet stage IS2M",
+  "main": "api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node api.js",
-    "build": "sudo docker build -t artware/backend-nodejs:latest ."
+    "build": "echo \"sudo docker build -t artware/backend-nodejs:latest . (Remove echo to build docker)\" && exit 1"
   },
   "author": "",
   "license": "ISC",
